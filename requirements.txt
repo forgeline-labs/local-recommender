@@ -1,0 +1,2 @@
+# Runtime dependencies: none. local-recommender uses only the Python 3.12
+# standard library. Development tooling is pinned in requirements-dev.txt.
