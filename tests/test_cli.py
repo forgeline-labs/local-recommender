@@ -129,6 +129,16 @@ def test_ac7_invalid_json_through_cli(run_app, tmp_path):
     assert process.stdout == b""
 
 
+def test_ac7_deeply_nested_json_is_rejected(run_app, tmp_path):
+    path = tmp_path / "nested.json"
+    path.write_text("[" * 1500 + "]" * 1500, encoding="utf-8")
+    process = run_app("recommend", path, "--user", "u1")
+    assert process.returncode == 2
+    assert process.stdout == b""
+    assert process.stderr.startswith(b"error:")
+    assert b"Traceback" not in process.stderr
+
+
 def test_ac7_duplicate_json_keys_are_rejected(run_app, tmp_path):
     path = tmp_path / "duplicate.json"
     path.write_text('[{"user":"u1","user":"u2","item":"a"}]', encoding="utf-8")

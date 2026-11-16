@@ -156,6 +156,10 @@ def _load_interactions(data):
         )
     except json.JSONDecodeError as exc:
         raise ValueError("input file is not valid JSON") from exc
+    except RecursionError as exc:
+        # Deeply nested JSON exhausts the decoder's recursion limit instead of
+        # raising JSONDecodeError; treat it as invalid input, not a crash.
+        raise ValueError("input file is not valid JSON") from exc
     if not isinstance(payload, list):
         raise ValueError("interactions must be a JSON array")
     return payload
